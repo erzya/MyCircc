@@ -103,7 +103,9 @@ public class  MyPanel extends JPanel {
 
     protected void moveCircle(PaintOval i) {
     	double friction =0.95;
-    	
+    	if(isGravityCheck()) {
+    		addVectors(i, 2 * Math.PI, 0.08);
+    	}
         i.setXpos(i.getXpos() + Math.sin(i.getAngle()) * i.getSpeed() * friction) ;
         i.setYpos(i.getYpos() + Math.cos(i.getAngle()) * i.getSpeed() * friction);
 
@@ -140,7 +142,7 @@ public class  MyPanel extends JPanel {
         }
     }
     
-    private boolean testCircleIntersection(PaintOval i, PaintOval j) {
+    private boolean testCircleIntersection(PaintOval i, PaintOval j) {    
         double dx = i.getXpos() - j.getXpos();
         double dy = i.getYpos() - j.getYpos();
         
@@ -187,11 +189,16 @@ public class  MyPanel extends JPanel {
     }
     
     
-    private void addVectors(PaintOval i, double angle, double speed) {
+    private void addVectors(PaintOval i, double angle, double speed) {                  // find middle vector
     	double dx = Math.sin(i.getAngle()) * i.getSpeed() + Math.sin(angle) * speed;
-    	double dy =	Math.cos(i.getAngle()) * i.getSpeed() + Math.cos(angle) * speed;	
+    	double dy =	Math.cos(i.getAngle()) * i.getSpeed() + Math.cos(angle) * speed;
     	
-    	i.setAngle(0.5 * Math.PI + Math.atan2(dy, dx));
+    	if(isGravityCheck()) {
+    		i.setAngle(0.5 * Math.PI - Math.atan2(dy, dx));
+    	} else { 
+    		i.setAngle(0.5 * Math.PI + Math.atan2(dy, dx));
+    	}
+    	
     	i.setSpeed(Math.hypot(dx, dy));
     	
     }
