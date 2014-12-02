@@ -189,7 +189,7 @@ public class  MyPanel extends JPanel {
     }
     
     
-    private void addVectors(PaintOval i, double angle, double speed) {                  // find middle vector
+    private void addVectors(PaintOval i, double angle, double speed) {                  //  find middle vector
     	double dx = Math.sin(i.getAngle()) * i.getSpeed() + Math.sin(angle) * speed;
     	double dy =	Math.cos(i.getAngle()) * i.getSpeed() + Math.cos(angle) * speed;
     	
