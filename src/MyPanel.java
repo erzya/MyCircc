@@ -111,7 +111,7 @@ public class  MyPanel extends JPanel {
     protected void moveCircle(PaintOval i) {
     	double friction =0.9;
     	if(isGravityCheck()) {
-    		addVectors(i, 2 * Math.PI, 0.08);
+    		addVectors(i, 2 * Math.PI, 0.3);
     	}
         i.setXpos(i.getXpos() + Math.sin(i.getAngle()) * i.getSpeed() * friction) ;
         i.setYpos(i.getYpos() + Math.cos(i.getAngle()) * i.getSpeed() * friction);
