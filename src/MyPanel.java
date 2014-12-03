@@ -138,7 +138,12 @@ public class  MyPanel extends JPanel {
 
             i.setYpos((int) (2 * (getHeight() - i.getRadius())) - i.getYpos());
             i.setAngle(Math.PI - i.getAngle());
-            i.setSpeed(i.getSpeed() * elastic);
+            if(isGravityCheck()) {
+            	 i.setSpeed(i.getSpeed() * elastic * 0.7);
+            } else {
+
+               i.setSpeed(i.getSpeed() * elastic);
+            }
         }
     }
     
@@ -231,5 +236,3 @@ public class  MyPanel extends JPanel {
 	}
    
 }
-
-
