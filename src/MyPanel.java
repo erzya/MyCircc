@@ -16,6 +16,7 @@ public class  MyPanel extends JPanel {
     private  static List<PaintOval> list = new ArrayList<PaintOval>();
     
     private static boolean gravityCheck = false;
+    private boolean colission = true;
 
 
 	
@@ -78,9 +79,15 @@ public class  MyPanel extends JPanel {
                         if (j==i){
 
                             break;
-                        }else {
+                        } else {
 
-                          testCircleIntersection(list.get(i), list.get(j));
+                             if(testCircleIntersection(list.get(i), list.get(j))) {
+                            	
+                        	     calculateVector(list.get(i), list.get(j));
+                        	     colission = true;
+                          	    
+                          }
+                          
 
                         }
                     }
@@ -102,7 +109,7 @@ public class  MyPanel extends JPanel {
     }
 
     protected void moveCircle(PaintOval i) {
-    	double friction =0.95;
+    	double friction =0.9;
     	if(isGravityCheck()) {
     		addVectors(i, 2 * Math.PI, 0.08);
     	}
@@ -139,7 +146,7 @@ public class  MyPanel extends JPanel {
             i.setYpos((int) (2 * (getHeight() - i.getRadius())) - i.getYpos());
             i.setAngle(Math.PI - i.getAngle());
             if(isGravityCheck()) {
-            	 i.setSpeed(i.getSpeed() * elastic * 0.7);
+            	 i.setSpeed(i.getSpeed() * elastic * 0.75);
             } else {
 
                i.setSpeed(i.getSpeed() * elastic);
@@ -153,35 +160,31 @@ public class  MyPanel extends JPanel {
         
 
         if ( Math.hypot(dx,dy) < (i.getRadius() + j.getRadius())) {
-        	
-        	calculateVector(i,j,dx,dy);
             return true;
-        }
+        }   
         return false;
     }
     
     
-    private void calculateVector (PaintOval i, PaintOval j, double dx, double dy) {
+    private void calculateVector (PaintOval i, PaintOval j) {
+    	
+    	double dx = i.getXpos() - j.getXpos();
+        double dy = i.getYpos() - j.getYpos();
     	
     	double dir = i.getRadius() + j.getRadius()-Math.hypot(dx,dy);
         
-        double tang =Math.atan2(dy,dx);
-        double angle = 0.5 * Math.PI + tang;
-        
-        
+        double angle = 0.5 * Math.PI + Math.atan2(dy,dx);
         double totalMass = i.getMass() + j.getMass();
         
-        double speedI = i.getSpeed() * ((i.getMass() - j.getMass())/totalMass);
-        double speedII = (2 * j.getSpeed() * j.getMass())/totalMass;
+
+        double speedI = (2 * j.getSpeed() * j.getMass())/totalMass;
+        double speedJ = (2 * i.getSpeed() * i.getMass())/totalMass;
         
-        double speedJ = j.getSpeed() * ((j.getMass() - i.getMass())/ totalMass);
-        double speedJJ = (2 * i.getSpeed() * i.getMass())/totalMass;
-        
-        i.setSpeed(speedI);
-        j.setSpeed(speedJ);
+        i.setSpeed(i.getSpeed() * ((i.getMass() - j.getMass())/totalMass));
+        j.setSpeed(j.getSpeed() * ((j.getMass() - i.getMass())/ totalMass));
        
-        addVectors(i, angle,speedII);
-        addVectors(j, angle + Math.PI,speedJJ);
+        addVectors(i, angle,speedI);
+        addVectors(j, angle + Math.PI,speedJ);
     
         i.setSpeed(i.getSpeed() * i.getElastic());
         j.setSpeed(j.getSpeed() * j.getElastic());
@@ -200,6 +203,10 @@ public class  MyPanel extends JPanel {
     	
     	if(isGravityCheck()) {
     		i.setAngle(0.5 * Math.PI - Math.atan2(dy, dx));
+    		if (colission) {
+    			i.setAngle(0.5 * Math.PI + Math.atan2(dy, dx));
+    			colission = false;
+    		}
     	} else { 
     		i.setAngle(0.5 * Math.PI + Math.atan2(dy, dx));
     	}
